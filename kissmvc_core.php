@@ -251,6 +251,11 @@ class KISS_Model  {
 		$this->set($pkname,$dbh->lastInsertId());
 		return $this;
 	}
+	
+	// pode-se usar create ou insert para salvar o modelo
+	function insert(){
+		return $this->create();
+	}
 
 	function retrieve($pkvalue) {
 		$dbh=$this->getdbh();
@@ -300,6 +305,14 @@ class KISS_Model  {
 		$sql = 'SELECT 1 FROM '.$this->enquote($this->tablename).' WHERE '.$this->enquote($this->pkname)."='".$this->rs[$this->pkname]."'";
 		$result = $dbh->query($sql)->fetchAll();
 		return count($result);
+	}
+	
+	// Se o modelo não existir no banco salva se existe fa update 
+	function save(){
+		if(! $this->exists())
+			return $this->insert();
+		else
+			return $this->update();
 	}
 
 	function merge($arr) {
