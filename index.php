@@ -25,7 +25,7 @@ define('VIEW_PATH','app/views/'); //with trailing slash pls
 //===============================================
 // Includes
 //===============================================
-require('kissmvc.php');
+require('lib/kissmvc/kissmvc.php');
 require(APP_PATH.'inc/functions.php');
 
 //===============================================
