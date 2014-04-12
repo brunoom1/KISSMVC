@@ -1,5 +1,5 @@
 <?php
-function myUrl($url='',$fullurl=false) {
+function url($url='',$fullurl=false) {
   $s=$fullurl ? WEB_DOMAIN : '';
   $s.=WEB_FOLDER.$url;
   return $s;

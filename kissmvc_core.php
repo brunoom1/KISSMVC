@@ -67,14 +67,33 @@ class KISS_Controller {
 		if (isset($p[2]))
 			$params=array_slice($p,2);
 
+		// verificar se existe um arquivo com o mesmo nome do controller e se existir carregar este também
+		// pois as vezes a necessidade de carregar coisas que serão utilizadas para todas as ações
+		// como está ocorrendo dentro de cada função dentro do controle.
+		$controller_main_file = $this->controller_path.$controller . '/' . $controller . '.php';
+
+		if(file_exists($controller_main_file)){
+			require $controller_main_file;
+			// Não será obrigatório por isso só chamo caso ele exista, de resto segue a mesma regra
+			$controller_main_func_name = "_" . $controller;
+			if(function_exists($controller_main_func_name)){
+				call_user_func_array($controller_main_func_name, $params);
+			}
+		}
+
 		$controllerfile=$this->controller_path.$controller.'/'.$function.'.php';
-		if (!preg_match('#^[A-Za-z0-9_-]+$#',$controller) || !file_exists($controllerfile))
+
+
+		if (!file_exists($controllerfile))
 			$this->request_not_found();
 
-		$function='_'.$function;
-		if (!preg_match('#^[A-Za-z_][A-Za-z0-9_-]*$#',$function) || function_exists($function))
-			$this->request_not_found();
 		require($controllerfile);
+
+		$function='_'.$function;
+		if (!function_exists($function))
+			$this->request_not_found();
+
+
 		if (!function_exists($function))
 			$this->request_not_found();
 
